@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useTodoList() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
   const [archivedTasks, setArchivedTasks] = useState([]);
   const [filter, setFilter] = useState("all");
   const [alert, setAlert] = useState({ show: false, message: "" });
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const showAlert = (message) => {
     setAlert({ show: true, message });
@@ -14,17 +22,16 @@ export default function useTodoList() {
   const addTask = (text) => {
     const trimmedText = text.trim();
     if (!trimmedText) {
-      showAlert("Veuillez saisir une tâche.");
+      showAlert("Erreur : Veuillez saisir une tâche valide.");
       return;
     }
 
     const taskExists = tasks.some(
-      (task) =>
-        task.text.toLowerCase() === trimmedText.toLowerCase() && !task.completed
+      (task) => task.text.toLowerCase() === trimmedText.toLowerCase()
     );
 
     if (taskExists) {
-      showAlert("Cette tâche existe déjà.");
+      showAlert("Erreur : Cette tâche existe déjà.");
       return;
     }
 
@@ -50,14 +57,26 @@ export default function useTodoList() {
   };
 
   const editTask = (taskId, newText) => {
-    if (!newText.trim()) {
-      showAlert("Veuillez saisir une tâche.");
+    const trimmedText = newText.trim();
+    if (!trimmedText) {
+      showAlert("Erreur : Veuillez saisir un texte valide pour la tâche.");
+      return;
+    }
+
+    const taskExists = tasks.some(
+      (task) =>
+        task.text.toLowerCase() === trimmedText.toLowerCase() &&
+        task.id !== taskId
+    );
+
+    if (taskExists) {
+      showAlert("Erreur : Cette tâche existe déjà.");
       return;
     }
 
     setTasks((prev) =>
       prev.map((task) =>
-        task.id === taskId ? { ...task, text: newText.trim() } : task
+        task.id === taskId ? { ...task, text: trimmedText } : task
       )
     );
   };
@@ -79,19 +98,33 @@ export default function useTodoList() {
   };
 
   const getFilteredTasks = (taskList) => {
+    let filteredTasks = taskList;
+    if (searchTerm) {
+      filteredTasks = filteredTasks.filter((task) =>
+        task.text.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    console.log("Termes de recherche :", searchTerm);
+    console.log("Tâches filtrées :", filteredTasks);
+
     switch (filter) {
       case "active":
-        return taskList.filter((task) => !task.completed);
+        return filteredTasks.filter((task) => !task.completed);
       case "completed":
-        return taskList.filter((task) => task.completed);
+        return filteredTasks.filter((task) => task.completed);
       default:
-        return taskList;
+        return filteredTasks.sort((a, b) => b.id - a.id);
     }
   };
 
+  const tasksToRender = tasks.length > 0 ? getFilteredTasks(tasks) : [];
+  const archivedTasksToRender =
+    archivedTasks.length > 0 ? getFilteredTasks(archivedTasks) : [];
+
   return {
-    tasks: getFilteredTasks(tasks),
-    archivedTasks: getFilteredTasks(archivedTasks),
+    tasks: tasksToRender,
+    archivedTasks: archivedTasksToRender,
     filter,
     alert,
     addTask,
@@ -101,5 +134,7 @@ export default function useTodoList() {
     archiveTask,
     deleteCompletedTasks,
     setFilter,
+    searchTerm,
+    setSearchTerm,
   };
 }

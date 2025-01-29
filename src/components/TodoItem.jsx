@@ -28,7 +28,7 @@ const TodoItem = ({
           value={editedText}
           onChange={(e) => setEditedText(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleEdit(e)}
-          className="flex-1 px-2 py-1 mr-2 border rounded"
+          className="flex-1 px-1 py-1 mr-2 border rounded-sm"
         />
       ) : (
         <span
@@ -40,25 +40,42 @@ const TodoItem = ({
         </span>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 ">
         {!isArchived && (
           <>
-            <Button variant="info" onClick={handleEdit}>
+            <Button
+              variant="info"
+              onClick={handleEdit}
+              aria-label={
+                isEditing ? "Ajouter modifications" : "Modifier la tâche"
+              }
+            >
               {isEditing ? (
                 <>
-                  {/* Ajouter modifications */}
-                  <i className="fas fa-pen-to-square" />
+                  <i className="fas fa-check" />
                 </>
               ) : (
                 <>
-                  {/* Modifier */}
                   <i className="fas fa-pen-to-square" />
                 </>
               )}
             </Button>
-            <Button variant="success" onClick={() => onComplete(task.id)}>
-              {task.completed ? "" : ""}
-              <i className="fas fa-check" />
+            <Button
+              variant="success"
+              onClick={() => onComplete(task.id)}
+              aria-label={
+                task.completed ? "Annuler terminer" : "Terminer la tâche"
+              }
+            >
+              {task.completed ? (
+                <>
+                  <i className="fas fa-undo" />
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-check" />
+                </>
+              )}
             </Button>
             <Button variant="danger" onClick={() => onDelete(task.id)}>
               {/* Supprimer */}

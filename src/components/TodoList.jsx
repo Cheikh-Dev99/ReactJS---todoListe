@@ -1,12 +1,12 @@
 import { useState } from "react";
 import add from "../assets/ajouter.png";
 import useTodoList from "../hooks/useTodoList";
-import TodoItem from "./TodoItem";
 import Alert from "../ui/Alert";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import RadioButton from "../ui/RadioButton";
 import SectionTitle from "../ui/SectionTitle";
+import TodoItem from "./TodoItem";
 
 export default function TodoList() {
   const [newTask, setNewTask] = useState("");
@@ -23,18 +23,29 @@ export default function TodoList() {
     archiveTask,
     deleteCompletedTasks,
     setFilter,
+    setSearchTerm,
   } = useTodoList();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTask(newTask);
-    setNewTask("");
+    if (newTask.trim()) {
+      addTask(newTask);
+      setNewTask("");
+    }
   };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+  };
+
+  console.log("Tâches à afficher :", tasks);
 
   return (
     <div className="container mx-auto max-w-3xl p-8 bg-white rounded-lg shadow-lg my-20">
-      <h1 className="text-2xl font-bold text-center mb-6 py-3 shadow-md">
-        Ma liste de tâches <br /> (To Do List)
+      <h1 className="text-2xl font-bold text-center mb-6 py-3 shadow-md shadow-gray-400">
+        {/* Ma liste de tâches <br /> */}
+        My ToDo Liste
       </h1>
 
       <Alert show={alert.show} message={alert.message} />
@@ -48,6 +59,7 @@ export default function TodoList() {
               onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
               placeholder="Nouvelle tâche"
               className="flex-1"
+              aria-label="Ajouter une nouvelle tâche"
             />
             <Button rounded onClick={handleSubmit}>
               <img src={add} alt="ajouter logo" className="w-6 h-6" />
@@ -95,21 +107,31 @@ export default function TodoList() {
           onChange={() => setFilter("completed")}
           label="Terminées"
         />
+        <input
+          type="text"
+          placeholder="Rechercher une tâche"
+          className="border rounded p-2 ml-auto"
+          onChange={handleSearchChange}
+        />
       </form>
 
       <div className={`my-4 ${showArchived ? "hidden" : ""}`}>
         <SectionTitle>Tâches principales</SectionTitle>
-        <ul>
-          {tasks.map((task) => (
-            <TodoItem
-              key={task.id}
-              task={task}
-              onComplete={toggleComplete}
-              onDelete={deleteTask}
-              onEdit={editTask}
-              onArchive={archiveTask}
-            />
-          ))}
+        <ul className="max-h-60 overflow-y-auto">
+          {tasks.length === 0 ? (
+            <li>Aucune tâche trouvée.</li>
+          ) : (
+            tasks.map((task) => (
+              <TodoItem
+                key={task.id}
+                task={task}
+                onComplete={toggleComplete}
+                onDelete={deleteTask}
+                onEdit={editTask}
+                onArchive={archiveTask}
+              />
+            ))
+          )}
         </ul>
       </div>
 
