@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import add from "../../dist/assets/ajouter-zkJO3DTk.png";
 import add from "../assets/ajouter.png";
 import useTodoList from "../hooks/useTodoList";
 import Alert from "../ui/Alert";
