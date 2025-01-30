@@ -1,5 +1,5 @@
 import { useState } from "react";
-import add from "../assets/ajouter.png";
+// import add from "../../dist/assets/ajouter-zkJO3DTk.png";
 import useTodoList from "../hooks/useTodoList";
 import Alert from "../ui/Alert";
 import Button from "../ui/Button";
@@ -62,7 +62,7 @@ export default function TodoList() {
               aria-label="Ajouter une nouvelle tâche"
             />
             <Button rounded onClick={handleSubmit}>
-              <img src={add} alt="ajouter logo" className="w-6 h-6" />
+              {/* <img src={add} alt="ajouter logo" className="w-6 h-6" /> */}
             </Button>
           </div>
 
