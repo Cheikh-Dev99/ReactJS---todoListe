@@ -45,9 +45,10 @@ export default function TodoList() {
 
   return (
     <div className="container bg-white mx-auto max-w-3xl p-8 rounded-lg shadow-lg my-20">
-      <h1 className="brand text-2xl font-bold text-center mb-6 py-0 shadow-md shadow-gray-400">
-        <img src={todolist} alt="logo" className="w-full h-20" /> To Do List
+      <h1 className="flex justify-center items-center text-2xl font-bold text-center mb-6 py-0 shadow-md shadow-gray-400">
+        My  <img src={todolist} alt="logo" className="w-10 h-10" /> Liste
       </h1>
+
 
 
       <Alert show={alert.show} message={alert.message} />
