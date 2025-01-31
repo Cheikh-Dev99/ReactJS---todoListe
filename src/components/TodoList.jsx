@@ -41,15 +41,11 @@ export default function TodoList() {
     setSearchTerm(value);
   };
 
-  console.log("Tâches à afficher :", tasks);
-
   return (
     <div className="container bg-white mx-auto max-w-3xl p-8 rounded-lg shadow-lg my-20">
       <h1 className="flex justify-center items-center text-2xl font-bold text-center mb-6 py-0 shadow-md shadow-gray-400">
-        My  <img src={todolist} alt="logo" className="w-10 h-10" /> Liste
+        My <img src={todolist} alt="logo" className="w-10 h-10" /> Liste
       </h1>
-
-
 
       <Alert show={alert.show} message={alert.message} />
 
@@ -61,10 +57,10 @@ export default function TodoList() {
               onChange={(e) => setNewTask(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
               placeholder="Nouvelle tâche"
-              className="flex-1 border-1 border-blue-300 focus:border-blue-500 rounded-md"
+              className="flex-1"
               aria-label="Ajouter une nouvelle tâche"
             />
-            <Button rounded onClick={handleSubmit}>
+            <Button rounded onClick={handleSubmit} className="hidden sm:block">
               <img src={add} alt="ajouter logo" className="w-6 h-6" />
             </Button>
           </div>
@@ -88,13 +84,14 @@ export default function TodoList() {
         </div>
       </div>
 
-      <form className="flex items-center gap-4 my-4">
+      <form className="flex flex-col sm:flex-row tems-center sm:items-start gap-4 my-4">
         <RadioButton
           id="checkbox-tous"
           name="statut"
           checked={filter === "all"}
           onChange={() => setFilter("all")}
           label="Tous"
+
         />
         <RadioButton
           id="checkbox-actives"
@@ -110,10 +107,10 @@ export default function TodoList() {
           onChange={() => setFilter("completed")}
           label="Terminées"
         />
-        <input
+        <Input
           type="text"
           placeholder="Rechercher une tâche"
-          className="border rounded p-2 ml-auto"
+          className="border rounded ml-auto w-full sm:w-auto"
           onChange={handleSearchChange}
         />
       </form>

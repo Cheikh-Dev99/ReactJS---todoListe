@@ -105,9 +105,6 @@ export default function useTodoList() {
       );
     }
 
-    console.log("Termes de recherche :", searchTerm);
-    console.log("Tâches filtrées :", filteredTasks);
-
     switch (filter) {
       case "active":
         return filteredTasks.filter((task) => !task.completed);

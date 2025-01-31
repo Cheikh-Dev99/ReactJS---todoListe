@@ -17,7 +17,7 @@ export default function Input({
       onKeyDown={onKeyDown}
       placeholder={placeholder}
       required={required}
-      className={`p-2 border rounded outline-none focus:border-blue-500 ${className}`}
+      className={`p-1 border outline-none border-1 border-blue-300 focus:border-blue-500 rounded-md ${className}`}
     />
   );
 }
