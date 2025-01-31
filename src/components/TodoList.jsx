@@ -7,6 +7,8 @@ import Input from "../ui/Input";
 import RadioButton from "../ui/RadioButton";
 import SectionTitle from "../ui/SectionTitle";
 import TodoItem from "./TodoItem";
+import todolist from "../assets/logo.png";
+
 
 export default function TodoList() {
   const [newTask, setNewTask] = useState("");
@@ -42,11 +44,11 @@ export default function TodoList() {
   console.log("Tâches à afficher :", tasks);
 
   return (
-    <div className="container mx-auto max-w-3xl p-8 bg-white rounded-lg shadow-lg my-20">
-      <h1 className="text-2xl font-bold text-center mb-6 py-3 shadow-md shadow-gray-400">
-        {/* Ma liste de tâches <br /> */}
-        My ToDo Liste
+    <div className="container bg-white mx-auto max-w-3xl p-8 rounded-lg shadow-lg my-20">
+      <h1 className="brand text-2xl font-bold text-center mb-6 py-0 shadow-md shadow-gray-400">
+        <img src={todolist} alt="logo" className="w-full h-20" /> To Do List
       </h1>
+
 
       <Alert show={alert.show} message={alert.message} />
 
@@ -58,7 +60,7 @@ export default function TodoList() {
               onChange={(e) => setNewTask(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
               placeholder="Nouvelle tâche"
-              className="flex-1"
+              className="flex-1 border-1 border-blue-300 focus:border-blue-500 rounded-md"
               aria-label="Ajouter une nouvelle tâche"
             />
             <Button rounded onClick={handleSubmit}>

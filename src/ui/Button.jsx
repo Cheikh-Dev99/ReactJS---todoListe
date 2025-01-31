@@ -24,7 +24,7 @@ const Button = ({
       className={`
         ${baseClasses} 
         ${variants[variant]} 
-        ${rounded ? "rounded-full" : "rounded"}
+        ${rounded ? "rounded-full" : "rounded-lg"}
         ${className}
       `}
     >
