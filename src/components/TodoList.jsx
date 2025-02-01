@@ -171,17 +171,22 @@ export default function TodoList() {
       <div className={`my-4 ${!showArchived ? "hidden" : ""}`}>
         <SectionTitle>Tâches archivées</SectionTitle>
         <ul>
-          {archivedTasks.map((task) => (
-            <TodoItem
-              key={task.id}
-              task={task}
-              onComplete={toggleComplete}
-              onDelete={deleteTask}
-              onEdit={editTask}
-              onArchive={archiveTask}
-              isArchived
-            />
-          ))}
+          {archivedTasks.length === 0 ? (
+            <li>Aucune tâche archivée trouvée.</li>
+          ) : (
+            archivedTasks.map((task, index) => (
+              <TodoItem
+                key={task.id}
+                task={task}
+                index={index}
+                onComplete={toggleComplete}
+                onDelete={deleteTask}
+                onEdit={editTask}
+                onArchive={archiveTask}
+                isArchived
+              />
+            ))
+          )}
         </ul>
       </div>
     </div>

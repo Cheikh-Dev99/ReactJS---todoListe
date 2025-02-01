@@ -10,7 +10,10 @@ export default function useTodoList() {
       order: task.order ?? (-task.createdAt || -(task.id || Date.now())),
     }));
   });
-  const [archivedTasks, setArchivedTasks] = useState([]);
+  const [archivedTasks, setArchivedTasks] = useState(() => {
+    const savedArchivedTasks = localStorage.getItem("archivedTasks");
+    return savedArchivedTasks ? JSON.parse(savedArchivedTasks) : [];
+  });
   const [filter, setFilter] = useState("all");
   const [alert, setAlert] = useState({ show: false, message: "" });
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +21,10 @@ export default function useTodoList() {
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("archivedTasks", JSON.stringify(archivedTasks));
+  }, [archivedTasks]);
 
   const showAlert = (message) => {
     setAlert({ show: true, message });
@@ -95,8 +102,10 @@ export default function useTodoList() {
       setArchivedTasks((prev) => [...prev, taskToArchive]);
     } else {
       const taskToUnarchive = archivedTasks.find((task) => task.id === taskId);
-      setArchivedTasks((prev) => prev.filter((task) => task.id !== taskId));
-      setTasks((prev) => [...prev, taskToUnarchive]);
+      if (taskToUnarchive) {
+        setArchivedTasks((prev) => prev.filter((task) => task.id !== taskId));
+        setTasks((prev) => [...prev, taskToUnarchive]);
+      }
     }
   };
 
