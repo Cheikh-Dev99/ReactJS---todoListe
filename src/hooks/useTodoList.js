@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 export default function useTodoList() {
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem("tasks");
-    return savedTasks ? JSON.parse(savedTasks) : [];
+    const loadedTasks = savedTasks ? JSON.parse(savedTasks) : [];
+    // Ajouter l'ordre si pas présent
+    return loadedTasks.map((task, index) => ({
+      ...task,
+      order: task.order ?? (-task.createdAt || -(task.id || Date.now())),
+    }));
   });
   const [archivedTasks, setArchivedTasks] = useState([]);
   const [filter, setFilter] = useState("all");
@@ -39,9 +44,11 @@ export default function useTodoList() {
       id: Date.now(),
       text: trimmedText,
       completed: false,
+      createdAt: Date.now(),
+      order: -Date.now(), // Utiliser un nombre négatif pour que les plus récents soient en haut
     };
 
-    setTasks((prev) => [...prev, newTask]);
+    setTasks((prev) => [newTask, ...prev]); // Ajouter au début du tableau
   };
 
   const toggleComplete = (taskId) => {
@@ -97,13 +104,31 @@ export default function useTodoList() {
     setTasks((prev) => prev.filter((task) => !task.completed));
   };
 
+  const reorderTasks = (startIndex, endIndex) => {
+    const result = Array.from(tasks);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    // Mettre à jour l'ordre des tâches
+    const updatedTasks = result.map((task, index) => ({
+      ...task,
+      order: index,
+    }));
+
+    setTasks(updatedTasks);
+  };
+
   const getFilteredTasks = (taskList) => {
-    let filteredTasks = taskList;
+    let filteredTasks = [...taskList];
+
     if (searchTerm) {
       filteredTasks = filteredTasks.filter((task) =>
         task.text.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
+
+    // Trier par ordre personnalisé
+    filteredTasks.sort((a, b) => a.order - b.order);
 
     switch (filter) {
       case "active":
@@ -111,7 +136,7 @@ export default function useTodoList() {
       case "completed":
         return filteredTasks.filter((task) => task.completed);
       default:
-        return filteredTasks.sort((a, b) => b.id - a.id);
+        return filteredTasks;
     }
   };
 
@@ -133,5 +158,6 @@ export default function useTodoList() {
     setFilter,
     searchTerm,
     setSearchTerm,
+    reorderTasks,
   };
 }

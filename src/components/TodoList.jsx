@@ -8,7 +8,7 @@ import RadioButton from "../ui/RadioButton";
 import SectionTitle from "../ui/SectionTitle";
 import TodoItem from "./TodoItem";
 import todolist from "../assets/logo.png";
-
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 export default function TodoList() {
   const [newTask, setNewTask] = useState("");
@@ -26,6 +26,7 @@ export default function TodoList() {
     deleteCompletedTasks,
     setFilter,
     setSearchTerm,
+    reorderTasks,
   } = useTodoList();
 
   const handleSubmit = (e) => {
@@ -39,6 +40,24 @@ export default function TodoList() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    console.log('Drag end:', result); // Debug
+
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+
+    if (sourceIndex === destinationIndex) return;
+
+    // Désactiver temporairement les filtres pendant le drag & drop
+    if (filter !== 'all') {
+      setFilter('all');
+    }
+
+    reorderTasks(sourceIndex, destinationIndex);
   };
 
   return (
@@ -117,22 +136,36 @@ export default function TodoList() {
 
       <div className={`my-4 ${showArchived ? "hidden" : ""}`}>
         <SectionTitle>Tâches principales</SectionTitle>
-        <ul className="max-h-60 overflow-y-auto">
-          {tasks.length === 0 ? (
-            <li>Aucune tâche trouvée.</li>
-          ) : (
-            tasks.map((task) => (
-              <TodoItem
-                key={task.id}
-                task={task}
-                onComplete={toggleComplete}
-                onDelete={deleteTask}
-                onEdit={editTask}
-                onArchive={archiveTask}
-              />
-            ))
-          )}
-        </ul>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable" type="task">
+            {(provided, snapshot) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={`max-h-60 overflow-y-auto ${
+                  snapshot.isDraggingOver ? 'bg-gray-50' : ''
+                }`}
+              >
+                {tasks.length === 0 ? (
+                  <li>Aucune tâche trouvée.</li>
+                ) : (
+                  tasks.map((task, index) => (
+                    <TodoItem
+                      key={task.id}
+                      task={task}
+                      index={index}
+                      onComplete={toggleComplete}
+                      onDelete={deleteTask}
+                      onEdit={editTask}
+                      onArchive={archiveTask}
+                    />
+                  ))
+                )}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       <div className={`my-4 ${!showArchived ? "hidden" : ""}`}>
