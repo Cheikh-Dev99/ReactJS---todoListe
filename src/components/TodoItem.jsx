@@ -49,44 +49,48 @@ const TodoItem = ({
           )}
 
           <div className="flex gap-2 ">
-            <Button
-              variant="info"
-              onClick={handleEdit}
-              aria-label={
-                isEditing ? "Ajouter modifications" : "Modifier la tâche"
-              }
-            >
-              {isEditing ? (
-                <>
-                  <i className="fas fa-check" />
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-pen-to-square" />
-                </>
-              )}
-            </Button>
-            <Button
-              variant="success"
-              onClick={() => onComplete(task.id)}
-              aria-label={
-                task.completed ? "Annuler terminer" : "Terminer la tâche"
-              }
-            >
-              {task.completed ? (
-                <>
-                  <i className="fas fa-undo" />
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-check" />
-                </>
-              )}
-            </Button>
-            <Button variant="danger" onClick={() => onDelete(task.id)}>
-              {/* Supprimer */}
-              <i className="fas fa-trash" />
-            </Button>
+            {!isArchived && (
+              <>
+                <Button
+                  variant="info"
+                  onClick={handleEdit}
+                  aria-label={
+                    isEditing ? "Ajouter modifications" : "Modifier la tâche"
+                  }
+                >
+                  {isEditing ? (
+                    <>
+                      <i className="fas fa-check" />
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-pen-to-square" />
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="success"
+                  onClick={() => onComplete(task.id)}
+                  aria-label={
+                    task.completed ? "Annuler terminer" : "Terminer la tâche"
+                  }
+                >
+                  {task.completed ? (
+                    <>
+                      <i className="fas fa-undo" />
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-check" />
+                    </>
+                  )}
+                </Button>
+                <Button variant="danger" onClick={() => onDelete(task.id)}>
+                  {/* Supprimer */}
+                  <i className="fas fa-trash" />
+                </Button>
+              </>
+            )}
             <Button variant="primary" onClick={() => onArchive(task.id)}>
               {isArchived ? "" : ""}
               <i className="fas fa-box-archive" />
@@ -128,44 +132,52 @@ const TodoItem = ({
               )}
 
               <div className="flex gap-2 ">
-                <Button
-                  variant="info"
-                  onClick={handleEdit}
-                  aria-label={
-                    isEditing ? "Ajouter modifications" : "Modifier la tâche"
-                  }
-                >
-                  {isEditing ? (
-                    <>
-                      <i className="fas fa-check" />
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-pen-to-square" />
-                    </>
-                  )}
-                </Button>
-                <Button
-                  variant="success"
-                  onClick={() => onComplete(task.id)}
-                  aria-label={
-                    task.completed ? "Annuler terminer" : "Terminer la tâche"
-                  }
-                >
-                  {task.completed ? (
-                    <>
-                      <i className="fas fa-undo" />
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-check" />
-                    </>
-                  )}
-                </Button>
-                <Button variant="danger" onClick={() => onDelete(task.id)}>
-                  {/* Supprimer */}
-                  <i className="fas fa-trash" />
-                </Button>
+                {!isArchived && (
+                  <>
+                    <Button
+                      variant="info"
+                      onClick={handleEdit}
+                      aria-label={
+                        isEditing
+                          ? "Ajouter modifications"
+                          : "Modifier la tâche"
+                      }
+                    >
+                      {isEditing ? (
+                        <>
+                          <i className="fas fa-check" />
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-pen-to-square" />
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="success"
+                      onClick={() => onComplete(task.id)}
+                      aria-label={
+                        task.completed
+                          ? "Annuler terminer"
+                          : "Terminer la tâche"
+                      }
+                    >
+                      {task.completed ? (
+                        <>
+                          <i className="fas fa-undo" />
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-check" />
+                        </>
+                      )}
+                    </Button>
+                    <Button variant="danger" onClick={() => onDelete(task.id)}>
+                      {/* Supprimer */}
+                      <i className="fas fa-trash" />
+                    </Button>
+                  </>
+                )}
                 <Button variant="primary" onClick={() => onArchive(task.id)}>
                   {isArchived ? "" : ""}
                   <i className="fas fa-box-archive" />
